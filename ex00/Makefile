@@ -1,21 +1,22 @@
 NAME = BitcoinExchange
-CC = c++
-FLAGS = -Wall -Wextra -Werror -std=c++98
-FILES = main \
-		BitcoinExchange
+CPP = c++
+CFLAGS = -Wall -Wextra -Werror
+CPPFLAGS = -std=c++98
+
+SRCS =	main.cpp \
+		BitcoinExchange.cpp
 
 INCLS = BitcoinExchange.hpp
 
-SRCS = $(addsuffix .cpp, $(FILES))
-OBJS = $(addsuffix .o, $(FILES))
+OBJS = $(SRCS:.cpp=.o)
 
 all: $(NAME)
 
 $(NAME): $(OBJS)
-	$(CC) $(FLAGS) -o $(NAME) $^
+	$(CPP) $(VFLAGS) -o $(NAME) $^
 
-.cpp.o: $(SRCS) $(INCLS)
-	$(CC) $(FLAGS) -c -o $@ $<
+%.o : %.cpp $(INCLS)
+	$(CPP) $(CFLAGS) $(CPPFLAGS) -c $< -o $@
 
 clean:
 	rm -f $(OBJS)
