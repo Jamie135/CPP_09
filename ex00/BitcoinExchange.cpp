@@ -7,8 +7,8 @@ BitcoinExchange::BitcoinExchange()
 
 	std::ifstream				file; //declaration du fichier
 	std::string					line; //stocker chaque ligne lue
-	std::string					word; //stocker chaque mots separer par ','
-	std::vector<std::string>	row; //vecteur de str utiliser pour stocker les mots de chaque ligne
+	std::string					word; //stocker chaque string separer par ','
+	std::vector<std::string>	col; //vecteur de str utiliser pour stocker les string de chaque ligne, chaque string representera une colonne
 
 	file.open("data.csv");
 	_data.clear(); //effacee le contenu de la variable _data
@@ -17,16 +17,16 @@ BitcoinExchange::BitcoinExchange()
 		i = 0;
 		while (file)
 		{
-			row.clear(); //effacer le contenu du vecteur row pour stocker les mots de la nouvelle ligne
+			col.clear(); //effacer le contenu du vecteur col pour stocker les string de la nouvelle ligne
 			std::getline(file, line); //lit une ligne du fichier et la stocke dans line
-			std::stringstream s(line); //string qui va etre servi pour l'extraction des mots
+			std::stringstream s(line); //string qui va etre servi pour l'extraction des strings de line
 			while (std::getline(s, word, ','))
 			{
-				row.push_back(word); //ajoute chaque mot au vecteur row
+				col.push_back(word); //ajoute chaque mot au vecteur col
 			}
 			//convertir la première colonne (date et heure) en un format approprié, et la deuxième colonne (prix) en un nombre à virgule flottante.
 			if (i != 0)
-				_data[setDate(row[0])] = std::atof(row[1].c_str());
+				_data[setDate(col[0])] = std::atof(col[1].c_str());
 			i++;
 		}
 		file.close();
@@ -100,13 +100,97 @@ void BitcoinExchange::readFile(const std::string &path)
 			std::getline(file, line);
 			std::stringstream s(line);
 			while (getline(s, word, '|'))
-				row.push_back(stripSpaces(word));
+				row.push_back(trimSpace(word));
 			if (i != 0)
-				handleLine(row);
+				processLine(row);
 			i++;
 		}
 		file.close();
 	}
 	else
 		throw std::runtime_error("Error: could not open file.");
+}
+
+//enlever les espaces
+std::string	BitcoinExchange::trimSpace(std::string &str)
+{
+	str = trimFront(str);
+	for (size_t i = 0; i < str.size() / 2; i++)
+	{
+		char c = str[i];
+		str[i] = str[str.size() - i - 1];
+		str[str.size() - i - 1] = c;
+	}
+	str = trimFront(str);
+	for (size_t i = 0; i < str.size() / 2; i++)
+	{
+		char c = str[i];
+		str[i] = str[str.size() - i - 1];
+		str[str.size() - i - 1] = c;
+	}
+	return (str);
+}
+
+////enlever les espaces au debut
+std::string	BitcoinExchange::trimFront(std::string &s)
+{
+	std::string res = "";
+	bool		flag = false;
+
+	for (size_t i = 0; i < s.size(); i++)
+	{
+		if (s[i] != ' ')
+			flag = true;
+		if (flag)
+			res += s[i];
+	}
+	return (res);
+}
+
+void	BitcoinExchange::processLine(std::vector<std::string> &line)
+{
+	std::string								word;
+	float									val;
+	int										valDate;
+	std::map<int, float>::iterator	itlow;
+
+	if (line.size() != 0)
+	{
+		if (setDate(line[0]))
+		{
+			if (line.size() != 2)
+				std::cerr << "Error: bad row => " << line[0] << std::endl;
+			else
+			{
+				val = std::atof(line[1].c_str());
+				if (val < 0)
+					std::cerr << "Error: not a positive number" << std::endl;
+				else if (val > 1000)
+					std::cerr << "Error: too large a number." << std::endl;
+				else if ((line[1] == "0.0" || line[1] == "0") && val == 0)
+					std::cout << line[0] << " => " << line[1] << " = 0.0" << std::endl;
+				else if ((line[1] == "0.0" || line[1] == "0") && val != 0)
+					std::cerr << "Error: bad input => " << line[1] << std::endl;
+				else
+				{
+					valDate = setDate(line[0]);
+					itlow = _data.lower_bound(valDate);
+					if (itlow->first == valDate)
+						std::cout << line[0] << " => " << line[1] << " = " << (itlow->second * val) << std::endl;
+					else
+					{
+						if (_data.begin() != itlow)
+							--itlow;
+						if (_data.begin() == itlow
+							&& valDate != (itlow->first))
+							std::cerr << "Error: bitcoin doesn't exist here" << std::endl;
+						else
+							std::cout << line[0] << " => " << line[1] << " = " << (itlow->second * val) << std::endl;
+					}
+				}
+			}
+		}
+		else
+			std::cerr << "Error: bad input => " << line[0] << std::endl;
+	}
 }

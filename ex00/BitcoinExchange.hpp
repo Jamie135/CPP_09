@@ -21,5 +21,7 @@ class BitcoinExchange
 
 		int			setDate(std::string &strDate);
 		void		readFile(const std::string &filePath);
-
+		std::string	trimSpace(std::string &str);
+		std::string	trimFront(std::string &str);
+		void		processLine(std::vector<std::string> &line);
 };
