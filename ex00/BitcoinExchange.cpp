@@ -149,10 +149,9 @@ std::string	BitcoinExchange::trimFront(std::string &s)
 
 void	BitcoinExchange::processLine(std::vector<std::string> &line)
 {
-	std::string								word;
-	float									val;
-	int										valDate;
-	std::map<int, float>::iterator	itlow;
+	float									btcVal; //valeur numérique extraite
+	int										date; //date extraite
+	std::map<int, float>::iterator			it; //itérateur pour _data où la clé est de type entier et la valeur est de type flottant
 
 	if (line.size() != 0)
 	{
@@ -162,30 +161,31 @@ void	BitcoinExchange::processLine(std::vector<std::string> &line)
 				std::cerr << "Error: bad row => " << line[0] << std::endl;
 			else
 			{
-				val = std::atof(line[1].c_str());
-				if (val < 0)
+				btcVal = std::atof(line[1].c_str());
+				if (btcVal < 0)
 					std::cerr << "Error: not a positive number" << std::endl;
-				else if (val > 1000)
+				else if (btcVal > 1000)
 					std::cerr << "Error: too large a number." << std::endl;
-				else if ((line[1] == "0.0" || line[1] == "0") && val == 0)
+				else if ((line[1] == "0.0" || line[1] == "0") && btcVal == 0)
 					std::cout << line[0] << " => " << line[1] << " = 0.0" << std::endl;
-				else if ((line[1] == "0.0" || line[1] == "0") && val != 0)
+				else if ((line[1] == "0.0" || line[1] == "0") && btcVal != 0)
 					std::cerr << "Error: bad input => " << line[1] << std::endl;
 				else
 				{
-					valDate = setDate(line[0]);
-					itlow = _data.lower_bound(valDate);
-					if (itlow->first == valDate)
-						std::cout << line[0] << " => " << line[1] << " = " << (itlow->second * val) << std::endl;
+					std::cout <<  line[0];
+					date = setDate(line[0]);
+					it = _data.lower_bound(date);
+					if (it->first == date)
+						std::cout << " => " << line[1] << " = " << (it->second * btcVal) << std::endl;
 					else
 					{
-						if (_data.begin() != itlow)
-							--itlow;
-						if (_data.begin() == itlow
-							&& valDate != (itlow->first))
+						if (_data.begin() != it)
+							--it;
+						if (_data.begin() == it
+							&& date != (it->first))
 							std::cerr << "Error: bitcoin doesn't exist here" << std::endl;
 						else
-							std::cout << line[0] << " => " << line[1] << " = " << (itlow->second * val) << std::endl;
+							std::cout << line[0] << " => " << line[1] << " = " << (it->second * btcVal) << std::endl;
 					}
 				}
 			}
