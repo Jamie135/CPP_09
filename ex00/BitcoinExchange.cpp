@@ -147,35 +147,39 @@ std::string	BitcoinExchange::trimFront(std::string &s)
 	return (res);
 }
 
-void	BitcoinExchange::processLine(std::vector<std::string> &line)
+void	BitcoinExchange::processLine(std::vector<std::string> &vectLine)
 {
 	float									bitcoin; //valeur numérique extraite
 	int										date; //date extraite
 	std::map<int, float>::iterator			it; //itérateur pour _data où la clé est de type entier et la valeur est de type flottant
 
-	if (line.size() != 0)
+	if (vectLine.size() != 0)
 	{
-		if (setDate(line[0]))
+		if (setDate(vectLine[0])) //convertir la date de l'input
 		{
-			if (line.size() != 2)
-				std::cerr << "Error: bad row => " << line[0] << std::endl;
+			if (vectLine.size() != 2)
+				std::cerr << "Error: bad row => " << vectLine[0] << std::endl;
 			else
 			{
-				bitcoin = std::atof(line[1].c_str());
+				bitcoin = std::atof(vectLine[1].c_str()); //convertir le nombre de bitcoin en flottant
 				if (bitcoin < 0)
 					std::cerr << "Error: not a positive number" << std::endl;
 				else if (bitcoin > 1000)
 					std::cerr << "Error: too large a number." << std::endl;
-				else if ((line[1] == "0.0" || line[1] == "0") && bitcoin == 0)
-					std::cout << line[0] << " => " << line[1] << " = 0.0" << std::endl;
-				else if ((line[1] == "0.0" || line[1] == "0") && bitcoin != 0)
-					std::cerr << "Error: bad input => " << line[1] << std::endl;
+				else if ((vectLine[1] == "0.0" || vectLine[1] == "0") && bitcoin == 0)
+				{
+					std::cout << vectLine[0] << " => " << vectLine[1] << " = 0.0" << std::endl;
+				}
+				else if ((vectLine[1] == "0.0" || vectLine[1] == "0") && bitcoin != 0)
+				{
+					std::cerr << "Error: bad input => " << vectLine[1] << std::endl;
+				}
 				else
 				{
-					date = setDate(line[0]);
+					date = setDate(vectLine[0]);
 					it = _data.lower_bound(date);
 					if (it->first == date)
-						std::cout << line[0] << " => " << bitcoin << " = " << (it->second * bitcoin) << std::endl;
+						std::cout << vectLine[0] << " => " << bitcoin << " = " << (it->second * bitcoin) << std::endl;
 					else
 					{
 						if (_data.begin() != it)
@@ -184,12 +188,12 @@ void	BitcoinExchange::processLine(std::vector<std::string> &line)
 							&& date != (it->first))
 							std::cerr << "Error: bitcoin doesn't exist here" << std::endl;
 						else
-							std::cout << line[0] << " => " << bitcoin << " = " << (it->second * bitcoin) << std::endl;
+							std::cout << vectLine[0] << " => " << bitcoin << " = " << (it->second * bitcoin) << std::endl;
 					}
 				}
 			}
 		}
 		else
-			std::cerr << "Error: bad input => " << line[0] << std::endl;
+			std::cerr << "Error: bad input => " << vectLine[0] << std::endl;
 	}
 }
