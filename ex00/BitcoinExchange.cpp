@@ -175,7 +175,7 @@ void	BitcoinExchange::processLine(std::vector<std::string> &line)
 					date = setDate(line[0]);
 					it = _data.lower_bound(date);
 					if (it->first == date)
-						std::cout << line[0] << " = " << (it->second * bitcoin) << " => " << line[1] << std::endl;
+						std::cout << line[0] << " => " << bitcoin << " = " << (it->second * bitcoin) << std::endl;
 					else
 					{
 						if (_data.begin() != it)
@@ -184,7 +184,7 @@ void	BitcoinExchange::processLine(std::vector<std::string> &line)
 							&& date != (it->first))
 							std::cerr << "Error: bitcoin doesn't exist here" << std::endl;
 						else
-							std::cout << line[0] << " = " << (it->second * bitcoin) << " => " << line[1] << std::endl;
+							std::cout << line[0] << " => " << bitcoin << " = " << (it->second * bitcoin) << std::endl;
 					}
 				}
 			}
