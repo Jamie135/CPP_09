@@ -149,7 +149,7 @@ std::string	BitcoinExchange::trimFront(std::string &s)
 
 void	BitcoinExchange::processLine(std::vector<std::string> &line)
 {
-	float									btcVal; //valeur numérique extraite
+	float									bitcoin; //valeur numérique extraite
 	int										date; //date extraite
 	std::map<int, float>::iterator			it; //itérateur pour _data où la clé est de type entier et la valeur est de type flottant
 
@@ -161,22 +161,21 @@ void	BitcoinExchange::processLine(std::vector<std::string> &line)
 				std::cerr << "Error: bad row => " << line[0] << std::endl;
 			else
 			{
-				btcVal = std::atof(line[1].c_str());
-				if (btcVal < 0)
+				bitcoin = std::atof(line[1].c_str());
+				if (bitcoin < 0)
 					std::cerr << "Error: not a positive number" << std::endl;
-				else if (btcVal > 1000)
+				else if (bitcoin > 1000)
 					std::cerr << "Error: too large a number." << std::endl;
-				else if ((line[1] == "0.0" || line[1] == "0") && btcVal == 0)
+				else if ((line[1] == "0.0" || line[1] == "0") && bitcoin == 0)
 					std::cout << line[0] << " => " << line[1] << " = 0.0" << std::endl;
-				else if ((line[1] == "0.0" || line[1] == "0") && btcVal != 0)
+				else if ((line[1] == "0.0" || line[1] == "0") && bitcoin != 0)
 					std::cerr << "Error: bad input => " << line[1] << std::endl;
 				else
 				{
-					std::cout <<  line[0];
 					date = setDate(line[0]);
 					it = _data.lower_bound(date);
 					if (it->first == date)
-						std::cout << " => " << line[1] << " = " << (it->second * btcVal) << std::endl;
+						std::cout << line[0] << " = " << (it->second * bitcoin) << " => " << line[1] << std::endl;
 					else
 					{
 						if (_data.begin() != it)
@@ -185,7 +184,7 @@ void	BitcoinExchange::processLine(std::vector<std::string> &line)
 							&& date != (it->first))
 							std::cerr << "Error: bitcoin doesn't exist here" << std::endl;
 						else
-							std::cout << line[0] << " => " << line[1] << " = " << (it->second * btcVal) << std::endl;
+							std::cout << line[0] << " = " << (it->second * bitcoin) << " => " << line[1] << std::endl;
 					}
 				}
 			}
