@@ -32,7 +32,7 @@ BitcoinExchange::BitcoinExchange()
 		file.close();
 	}
 	else
-		throw std::runtime_error("Error: could not open database.");
+		throw std::runtime_error("Error: could not open data file.");
 }
 
 BitcoinExchange::BitcoinExchange(const BitcoinExchange &copy) : _data(copy._data)
