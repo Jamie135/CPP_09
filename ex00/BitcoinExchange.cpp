@@ -163,17 +163,9 @@ void	BitcoinExchange::processLine(std::vector<std::string> &vectLine)
 			{
 				bitcoin = std::atof(vectLine[1].c_str()); //convertir le nombre de bitcoin en flottant
 				if (bitcoin < 0)
-					std::cerr << "Error: not a positive number" << std::endl;
+					std::cerr << "Error: not a positive number." << std::endl;
 				else if (bitcoin > 1000)
 					std::cerr << "Error: too large a number." << std::endl;
-				else if ((vectLine[1] == "0.0" || vectLine[1] == "0") && bitcoin == 0)
-				{
-					std::cout << vectLine[0] << " => " << vectLine[1] << " = 0.0" << std::endl;
-				}
-				else if ((vectLine[1] == "0.0" || vectLine[1] == "0") && bitcoin != 0)
-				{
-					std::cerr << "Error: bad input => " << vectLine[1] << std::endl;
-				}
 				else
 				{
 					date = setDate(vectLine[0]);
@@ -186,7 +178,7 @@ void	BitcoinExchange::processLine(std::vector<std::string> &vectLine)
 							--it;
 						if (_data.begin() == it
 							&& date != (it->first))
-							std::cerr << "Error: bitcoin doesn't exist here" << std::endl;
+							std::cerr << "Error: bitcoin doesn't exist here." << std::endl;
 						else
 							std::cout << vectLine[0] << " => " << bitcoin << " = " << (it->second * bitcoin) << std::endl;
 					}
