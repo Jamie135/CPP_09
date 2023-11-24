@@ -1,5 +1,7 @@
 #include "PmergeMe.hpp"
 
+//Créer un ensemble set pour stocker des valeurs uniques en parcourant les arguments
+//puis vérifier si la valeur n'est pas déjà présente dans set et est non négative
 PmergeMe::PmergeMe(char **argv)
 {
 	int	val;
@@ -74,4 +76,18 @@ double PmergeMe::getTimeDeque() const
 double PmergeMe::getTimeList() const
 {
 	return (_timeList);
+}
+
+//comparer deux deques avec le premier element
+bool PmergeMe::cmpDeque(const std::deque<int> &a,
+		const std::deque<int> &b)
+{
+	return (a.front() < b.front());
+}
+
+//comparer deux listes avec le premier element
+bool PmergeMe::cmpList(const std::list<int> &a,
+		const std::list<int> &b)
+{
+	return (a.front() < b.front());
 }

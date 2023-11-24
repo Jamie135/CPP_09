@@ -33,8 +33,11 @@ class PmergeMe
 		const std::list<int>		&getValList() const;
 		const std::deque<int>		&getSortedDeque() const;
 		const std::list<int>		&getSortedList() const;
-		double				getTimeDeque() const;
-		double				getTimeList() const;
+		double						getTimeDeque() const;
+		double						getTimeList() const;
 
 		//Methods
+		static bool cmpDeque(const std::deque<int>& a, const std::deque<int>& b);
+		static bool cmpList(const std::list<int>& a, const std::list<int>& b);
+		
 };
