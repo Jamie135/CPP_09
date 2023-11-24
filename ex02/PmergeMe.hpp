@@ -15,13 +15,6 @@
 
 class PmergeMe
 {
-	private:
-		std::deque<int>		_valDeque;
-		std::list<int>		_valList;
-		std::deque<int>		_sortedDeque;
-		std::list<int>		_sortedList;
-		double				_timeDeque;
-		double				_timeList;
 	public:
 		PmergeMe(char **argv);
 		PmergeMe(const PmergeMe &copy);
@@ -39,5 +32,12 @@ class PmergeMe
 		//Methods
 		static bool cmpDeque(const std::deque<int>& a, const std::deque<int>& b);
 		static bool cmpList(const std::list<int>& a, const std::list<int>& b);
-		
+	
+	private:
+		std::deque<int>		_valDeque;
+		std::list<int>		_valList;
+		std::deque<int>		_sortedDeque;
+		std::list<int>		_sortedList;
+		double				_timeDeque;
+		double				_timeList;
 };
