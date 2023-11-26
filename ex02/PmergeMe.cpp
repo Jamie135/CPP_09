@@ -354,7 +354,7 @@ void PmergeMe::merge_insertion_List()
 	{
 		it = sorted.begin();
 		std::advance(it, insertIndex);
-		it = lower_bound_list(sorted.begin(), it, tosort.front());
+		it = lower_bound(sorted.begin(), it, tosort.front());
 		sorted.insert(it, tosort.front());
 		tosort.pop_front();
 		insertIndex += 2;
@@ -370,7 +370,7 @@ void PmergeMe::merge_insertion_List()
 
 	if (oddFlag)
 	{
-		it = lower_bound_list(sorted.begin(), sorted.end(), separated);
+		it = lower_bound(sorted.begin(), sorted.end(), separated);
 		sorted.insert(it, separated);
 	}
 

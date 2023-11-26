@@ -65,8 +65,9 @@ class PmergeMe
 			std::copy(temp.begin(), temp.end(), begin);
 		}
 
+		//trouver la première position dans la liste où l'élément peut être inséré de manière ordonnée
 		template <typename T>
-		typename std::list<T>::iterator lower_bound_list(typename std::list<T>::iterator first, typename std::list<T>::iterator last, const T& value) {
+		typename std::list<T>::iterator lower_bound(typename std::list<T>::iterator first, typename std::list<T>::iterator last, const T& value) {
 			while (first != last) {
 				typename std::list<T>::iterator mid = first;
 				std::advance(mid, std::distance(first, last) / 2);
