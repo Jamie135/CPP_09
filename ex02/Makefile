@@ -1,6 +1,6 @@
 NAME = PmergeMe
 CPP = c++
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -Wc++11-extensions
 CPPFLAGS = -std=c++98
 
 SRCS =	main.cpp \

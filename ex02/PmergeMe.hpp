@@ -38,8 +38,12 @@ class PmergeMe
 		//Function Templates
 		template <class Iterator>
 		void mergeDeque(Iterator begin, Iterator end) {
+			//vérifier si la séquence délimitée par les itérateurs est <= 1 
+			//si c'est le cas, la séquence est déjà triée
 			if (end <= begin + 1) return;
+			//calcul du point median
 			Iterator middle = begin + (end - begin) / 2;
+			//appel recursive pour trier les deux moitiés
 			mergeDeque(begin, middle);
 			mergeDeque(middle, end);
 			std::inplace_merge(begin, middle, end, cmpDeque);
@@ -59,6 +63,22 @@ class PmergeMe
 			std::merge(begin, middle, middle, end, std::back_inserter(temp), cmpList);
 
 			std::copy(temp.begin(), temp.end(), begin);
+		}
+
+		template <typename T>
+		typename std::list<T>::iterator lower_bound_list(typename std::list<T>::iterator first, typename std::list<T>::iterator last, const T& value) {
+			while (first != last) {
+				typename std::list<T>::iterator mid = first;
+				std::advance(mid, std::distance(first, last) / 2);
+
+				if (*mid < value) {
+					++mid;
+					first = mid;
+				} else {
+					last = mid;
+				}
+			}
+			return first;
 		}
 	
 	private:
