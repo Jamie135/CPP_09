@@ -48,12 +48,12 @@ BitcoinExchange &BitcoinExchange::operator=(const BitcoinExchange &src)
 	return (*this);
 }
 
-//convertir un string sous format YYYY-MM-DD en un int sous format DDMMYYYY 
+//convertir un string sous format YYYY-MM-DD en un int sous format YYYY00MMDD 
 int	BitcoinExchange::setDate(std::string &strDate)
 {
 	int					date = 0;
 	std::vector<int>	time; //vecteur d'entiers utilisé pour stocker toutes les composantes de la date extraites
-	std::string			word; //string  utilisée pour stocker chaque composante
+	std::string			word; //string utilisée pour stocker chaque composante
 	std::stringstream	s(strDate); //string qui va etre servi pour l'extraction
 	while (getline(s, word, '-')) //extraire chaque composante de la date séparée par '-' et les ajoute au vecteur time
 		time.push_back(std::atoi(word.c_str()));
@@ -78,6 +78,7 @@ int	BitcoinExchange::setDate(std::string &strDate)
 	date += time[2];
 	date += 100 * time[1];
 	date += 1000000 * time[0];
+	// std::cout << "date: " << date << std::endl;
 	return (date);
 }
 
